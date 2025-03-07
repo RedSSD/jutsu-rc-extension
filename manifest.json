@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "JutsuRC",
+  "version": "1.0.0",
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": ["Content.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "Popup.html",
+    "default_title": "JutsuRC"
+  },
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ]
+}
