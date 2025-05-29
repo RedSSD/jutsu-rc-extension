@@ -4,9 +4,7 @@
   "version": "1.0.0",
   "content_scripts": [
     {
-      "matches": [
-        "<all_urls>"
-      ],
+      "matches": ["https://jut.su/*"],
       "js": ["Content.js", "popup.js"]
     }
   ],
@@ -15,11 +13,16 @@
     "default_title": "JutsuRC"
   },
   "permissions": [
+    "tabs",
     "storage",
-    "activeTab"
+    "activeTab",
+    "nativeMessaging",
+    "scripting"
   ],
   "host_permissions": [
-    "http://*/*",
-    "https://*/*"
-  ]
+    "https://jut.su/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
 }
