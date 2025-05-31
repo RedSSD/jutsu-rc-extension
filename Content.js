@@ -1,4 +1,4 @@
-const WS_BASE_URL = `wss://d408-149-156-51-230.ngrok-free.app/ws/connection/`;
+const WS_BASE_URL = ``;
 const CHECK_INTERVAL_MS = 1500;
 
 let skipOpeningButton = getSkipOpeningButton();

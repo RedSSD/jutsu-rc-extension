@@ -6,6 +6,8 @@ const autoNextEpisodePlayCheckbox = document.getElementById('auto-next-ep-play')
 browser.storage.local.get().then((storage) =>{
     if (storage.jrcToken && saveButton) {
         document.getElementById('tokenInput').value = storage.jrcToken;
+        autoOpeningSkipCheckbox.checked = storage.autoOpeningSkip;
+        autoNextEpisodePlayCheckbox.checked = storage.autoNextEpisodePlay;
     }
 })
 
