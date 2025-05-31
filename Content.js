@@ -48,7 +48,7 @@ const nextEpisodeInterval = setInterval(() => {
 }, CHECK_INTERVAL_MS);
 
 
-//startConnection()
+startConnection()
 
 function startConnection() {
     chrome.storage.local.get('jrcToken', (result) => {
