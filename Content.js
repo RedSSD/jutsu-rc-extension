@@ -1,13 +1,54 @@
-const WS_BASE_URL = ``;
+const WS_BASE_URL = `wss://d408-149-156-51-230.ngrok-free.app/ws/connection/`;
+const CHECK_INTERVAL_MS = 1500;
 
-const skipOpeningButton = document.querySelector(
-    '[class*="vjs-overlay vjs-overlay-bottom-left vjs-overlay-skip-intro vjs-overlay-background"]'
-)
-const nextEpisodeButton = document.querySelector(
-    '[class*="vjs-overlay vjs-overlay-bottom-right vjs-overlay-skip-intro vjs-overlay-background"]'
-)
+let skipOpeningButton = getSkipOpeningButton();
+let nextEpisodeButton = getNextEpisodeButton();
 
-startConnection()
+
+function getSkipOpeningButton() {
+    return document.querySelector(
+        '[class*="vjs-overlay vjs-overlay-bottom-left vjs-overlay-skip-intro vjs-overlay-background"]'
+    )
+}
+
+function getNextEpisodeButton() {
+    return document.querySelector(
+        '[class*="vjs-overlay vjs-overlay-bottom-right vjs-overlay-skip-intro vjs-overlay-background"]'
+    )
+}
+
+const skipOpeningInterval = setInterval(() => {
+    skipOpeningButton = getSkipOpeningButton();
+    if (skipOpeningButton && !skipOpeningButton.classList.contains('vjs-hidden')) {
+
+        chrome.storage.local.get('autoOpeningSkip', (result) => {
+            if (result.autoOpeningSkip) {
+                console.log('Opening Skip');
+                skipOpeningButton.click();
+            }
+        });
+
+        clearInterval(skipOpeningInterval);
+    }
+}, CHECK_INTERVAL_MS);
+
+const nextEpisodeInterval = setInterval(() => {
+    nextEpisodeButton = getNextEpisodeButton();
+    if (nextEpisodeButton && !nextEpisodeButton.classList.contains('vjs-hidden')) {
+
+        chrome.storage.local.get('autoNextEpisodePlay', (result) => {
+            if (result.autoNextEpisodePlay) {
+                console.log('Episode Switch');
+                nextEpisodeButton.click();
+            }
+        });
+
+        clearInterval(nextEpisodeInterval);
+    }
+}, CHECK_INTERVAL_MS);
+
+
+//startConnection()
 
 function startConnection() {
     chrome.storage.local.get('jrcToken', (result) => {
@@ -83,4 +124,3 @@ function openWebSocket(jrcToken) {
         }, 5000);
     };
 }
-
