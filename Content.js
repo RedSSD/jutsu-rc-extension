@@ -1,43 +1,66 @@
 const WS_BASE_URL = ``;
 
-let roomName = "";
-let socket = null;
+const skipOpeningButton = document.querySelector(
+    '[class*="vjs-overlay vjs-overlay-bottom-left vjs-overlay-skip-intro vjs-overlay-background"]'
+)
+const nextEpisodeButton = document.querySelector(
+    '[class*="vjs-overlay vjs-overlay-bottom-right vjs-overlay-skip-intro vjs-overlay-background"]'
+)
 
-if (roomName) {
-    openWebSocket();
+startExtension()
+
+function startExtension() {
+    chrome.storage.local.get('jrcToken', (result) => {
+        const jrcToken = result.jrcToken;
+        openWebSocket(jrcToken);
+    });
 }
-/*window.addEventListener("message", function (event) {
-    if (event.source !== window) return; // Ensure the message is from the same page
 
-    if (event.data.type === "EXTENSION_INPUT") {
-        console.log("Received input from extension:", event.data.value);
-        roomName = event.data.value;
-        console.log(roomName);
-        // Open WebSocket only if roomName is valid and not empty
-        if (roomName) {
-            openWebSocket();
-        }
+function executeCommand(command, video) {
+    switch (command.action) {
+        case "pause/play":
+            video.paused ? video.play() : video.pause();
+            break;
+        case "V+":
+            video.volume = Math.min(video.volume + 0.1, 1); // Ensure max volume is 1
+            break;
+        case "V-":
+            video.volume = Math.max(video.volume - 0.1, 0); // Ensure min volume is 0
+            break;
+        case "forward":
+            video.currentTime = Math.min(video.currentTime+5, video.duration);
+            break;
+        case "back":
+            video.currentTime = Math.max(video.currentTime-5, 0);
+            break;
+        case "Skip OP":
+            skipOpeningButton.click();
+            break;
+        case "Next EP":
+            nextEpisodeButton.click();
+            break;
     }
-});*/
+}
 
-function openWebSocket() {
-    if (!roomName) {
-        console.error("WebSocket cannot be opened: roomName is not set.");
+
+function openWebSocket(jrcToken) {
+
+    console.log(jrcToken);
+
+    if (!jrcToken) {
+        console.error("WebSocket cannot be opened: jrcToken is not set.");
         return;
     }
 
-    const wsUrl = `${WS_BASE_URL}${roomName}/`;
-    socket = new WebSocket(wsUrl);
+    const wsUrl = `${WS_BASE_URL}${jrcToken}/`;
+    let socket = new WebSocket(wsUrl);
 
-    // ✅ WebSocket connection opened
     socket.onopen = function () {
-        console.log("WebSocket connected to room:", roomName);
+        console.log("WebSocket connected to room:", jrcToken);
     };
 
-    // ✅ Handle incoming messages
     socket.onmessage = function (event) {
-        let data = JSON.parse(event.data);
-        console.log("Received action:", data);
+        let message = JSON.parse(event.data);
 
         let video = document.querySelector("video");
         if (!video) {
@@ -45,30 +68,19 @@ function openWebSocket() {
             return;
         }
 
-        console.log("Received message:", data);
-        switch (data.action) {
-            case "pause/play":
-                video.paused ? video.play() : video.pause();
-                break;
-            case "V+":
-                video.volume = Math.min(video.volume + 0.1, 1); // Ensure max volume is 1
-                break;
-            case "V-":
-                video.volume = Math.max(video.volume - 0.1, 0); // Ensure min volume is 0
-                break;
-        }
+        console.log("Received message:", message);
+        executeCommand(message, video);
     };
 
-    // ✅ Handle WebSocket errors
     socket.onerror = function (error) {
         console.error("WebSocket Error:", error);
     };
 
-    // ✅ Handle WebSocket disconnection (with auto-reconnect)
     socket.onclose = function () {
         console.log("WebSocket disconnected. Reconnecting in 5s...");
         setTimeout(() => {
-            openWebSocket();
+            startExtension();
         }, 5000);
     };
 }
+
