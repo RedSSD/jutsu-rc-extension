@@ -7,9 +7,9 @@ const nextEpisodeButton = document.querySelector(
     '[class*="vjs-overlay vjs-overlay-bottom-right vjs-overlay-skip-intro vjs-overlay-background"]'
 )
 
-startExtension()
+startConnection()
 
-function startExtension() {
+function startConnection() {
     chrome.storage.local.get('jrcToken', (result) => {
         const jrcToken = result.jrcToken;
         openWebSocket(jrcToken);
@@ -79,7 +79,7 @@ function openWebSocket(jrcToken) {
     socket.onclose = function () {
         console.log("WebSocket disconnected. Reconnecting in 5s...");
         setTimeout(() => {
-            startExtension();
+            startConnection();
         }, 5000);
     };
 }
