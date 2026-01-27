@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "JutsuRC",
+  "version": "1.0.0",
+  "content_scripts": [
+    {
+      "matches": ["https://jut.su/*"],
+      "js": ["Content.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "Popup.html",
+    "default_title": "JutsuRC"
+  },
+  "permissions": [
+    "tabs",
+    "storage",
+    "activeTab",
+    "nativeMessaging",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://jut.su/*"
+  ]
+}

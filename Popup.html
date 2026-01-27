@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Extension Settings</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+<div class="shadow">
+    <div class="popup-container">
+        <h2>JutsuRC</h2>
+
+        <label for="tokenInput">Token:</label>
+        <input type="text" id="tokenInput" name="token" placeholder="Enter your token" class="input-field">
+
+        <div class="checkbox-container">
+            <label class="checkbox">
+                <input type="checkbox" id="auto-op-skip"/>
+                <div class="checkbox__checkmark"></div>
+                <div class="checkbox__body">Auto OP skip</div>
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" id="auto-next-ep-play"/>
+                <div class="checkbox__checkmark"></div>
+                <div class="checkbox__body">Auto next EP play</div>
+            </label>
+        </div>
+
+        <button id="save-btn" class="save-btn">Save Settings</button>
+        <div class="developer-info">
+            <p>Developed by <a href="https://github.com/RedSSD" target="_blank">
+                RedSSD
+            </a></p>
+        </div>
+    </div>
+</div>
+<script src="dist/popup.js"></script>
+</body>
+</html>
